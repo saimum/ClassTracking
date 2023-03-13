@@ -8,7 +8,7 @@ namespace BLL.IRepository
 {
     public interface IUnitOfWork : IDisposable
     {
-        public ClassDataModelRepo ClassDataModelRepo { get; }
+        public IClassDataModelRepo ClassDataModelRepo { get; }
         public IStudentRepo StudentRepo { get; }
         public ITeacherRepo TeacherRepo { get; }
         Task SaveAsync();

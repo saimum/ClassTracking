@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace BLL.IRepository
 {
-    public interface ClassDataModelRepo : IRepository<ClassDataModel>
+    public interface IClassDataModelRepo : IRepository<ClassDataModel>
     {
         Task UpdateAsync(ClassDataModel model);
-        Task<bool> IsActiveExistAsync();
+        //Task<bool> IsActiveExistAsync();
     }
 }

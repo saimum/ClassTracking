@@ -13,26 +13,26 @@ namespace DAL.DataModels
         [Key]
         public long Id { get; set; }
         [Required]
-        [StringLength(200)]
+        [StringLength(100)]
         public string Name { get; set; }
         [Required]
         [StringLength(50)]
         public string NID { get; set; }
-        //[Required]
-        //[StringLength(200)]
-        //public string FatherName { get; set; }
-        //[Required]
-        //[StringLength(200)]
-        //public string MotherName { get; set; }
-        //[Required]
-        //[StringLength(200)]
-        //public string Nationality { get; set; }
-        //[Column(TypeName = "datetime")]
-        //public DateTime EnrollDate { get; set; }
 
-
-        public int ClassDataModelId { get; set; }
+        public int? ClassDataModelId { get; set; }
         [ForeignKey("ClassDataModelId")]
-        public virtual ClassDataModel ClassDataModel { get; set; }
+        public virtual ClassDataModel? ClassDataModel { get; set; }
     }
 }
+//[Required]
+//[StringLength(200)]
+//public string FatherName { get; set; }
+//[Required]
+//[StringLength(200)]
+//public string MotherName { get; set; }
+//[Required]
+//[StringLength(200)]
+//public string Nationality { get; set; }
+//[Column(TypeName = "datetime")]
+//public DateTime EnrollDate { get; set; }
+

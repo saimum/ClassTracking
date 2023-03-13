@@ -10,7 +10,7 @@ namespace DAL.DataModels
     public class Teacher
     {
         [Key]
-        public long Id { get; set; }
+        public int Id { get; set; }
         [Required]
         [StringLength(200)]
         public string Name { get; set; }

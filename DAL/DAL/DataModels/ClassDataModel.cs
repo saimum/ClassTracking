@@ -11,17 +11,17 @@ namespace DAL.DataModels
     public class ClassDataModel
     {
         [Key]
-        public long Id { get; set; }
+        public int Id { get; set; }
         [Required]
-        [StringLength(200)]
+        [StringLength(50)]
         public string Name { get; set; }
 
         [Required]
-        public string MaxStudent { get; set; }
+        public int MaxStudent { get; set; }
 
-        public int TeacherId { get; set; }
+        public int? TeacherId { get; set; }
         [ForeignKey("TeacherId")]
-        public virtual Teacher Teacher { get; set; }
+        public virtual Teacher? Teacher { get; set; }
         public ICollection<Student> Students { get; set; }
     }
 }
