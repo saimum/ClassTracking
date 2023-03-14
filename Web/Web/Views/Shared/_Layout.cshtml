@@ -49,13 +49,13 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
         <script>
-        @if (TempData["display_message"] != null)
-        {
-            <text>alert('@TempData["display_message"]')</text>
-        }
         @if (ViewBag.hidden_message != null)
         {
             <text>console.log('@TempData["hidden_message"]')</text>
+        }
+        @if (TempData["display_message"] != null)
+        {
+            <text>alert('@TempData["display_message"]')</text>
         }
     </script>
 </body>

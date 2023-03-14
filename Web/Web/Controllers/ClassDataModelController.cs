@@ -194,5 +194,49 @@ namespace Web.Controllers
                 return View(viewModel);
             }
         }
+
+        public async Task<IActionResult> AssignStudents(Int64 id)
+        {
+            try
+            {
+                var classDataModel = (await _unitOfWork.ClassDataModelRepo.GetAsync(id));
+                if (classDataModel != null)
+                {
+                    var classViewModel = new ClassViewModel()
+                    {
+                        Id = classDataModel.Id,
+                        Name = classDataModel.Name,
+                        Standard = classDataModel.Standard,
+                        MaxStudent = classDataModel.MaxStudent
+                    };
+                    var studentViewModelList = (await _unitOfWork.StudentRepo.GetAllAsync(filter: m => m.IsActive == true, includeProperties: "ClassDataModel")).Select(studentDataModel => new StudentViewModel
+                    {
+                        Id = studentDataModel.Id,
+                        Name = studentDataModel.Name,
+                        NID = studentDataModel.NID,
+                        ClassDataModel = studentDataModel.ClassDataModel,
+                    }).ToList();
+
+                    return View(new Tuple<ClassViewModel, List<StudentViewModel>>(classViewModel, studentViewModelList));
+                }
+                else
+                {
+                    TempData["display_message"] = "Not found.";
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception exception)
+            {
+                TempData["display_message"] = "Server Error.";
+                var errorMessage = "";
+                while (exception != null)
+                {
+                    errorMessage = errorMessage + exception.Message + " |";
+                    exception = exception.InnerException;
+                }
+                TempData["hidden_message"] = "Error Message= " + errorMessage;
+                return RedirectToAction("Index");
+            }
+        }
     }
 }
