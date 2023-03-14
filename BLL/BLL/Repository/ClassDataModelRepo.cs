@@ -23,7 +23,22 @@ namespace BLL.Repository
             if (dataObj != null)
             {
                 dataObj.Name = viewModel.Name;
+                dataObj.Standard = viewModel.Standard;
+                dataObj.MaxStudent = viewModel.MaxStudent;
             }
+        }
+        public async Task<bool> IsNameExistAsync(ClassViewModel viewModel)
+        {
+            var dataObjCheck = false;
+            if (viewModel.Id == 0)
+            {
+                dataObjCheck = await _db.ClassDataModels.AnyAsync(x => x.Name == viewModel.Name);
+            }
+            else
+            {
+                dataObjCheck = await _db.ClassDataModels.AnyAsync(x => x.Name == viewModel.Name && x.Id != viewModel.Id);
+            }
+            return dataObjCheck;
         }
     }
 }

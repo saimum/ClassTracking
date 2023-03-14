@@ -1,0 +1,38 @@
+﻿@model DAL.ViewModels.ClassViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayFor(model => model.Name)
+        </dt>
+    </dl>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Standard)
+        </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayFor(model => model.Standard)
+        </dt>
+    </dl>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaxStudent)
+        </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayFor(model => model.MaxStudent)
+        </dt>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

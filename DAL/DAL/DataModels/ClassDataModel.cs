@@ -15,9 +15,10 @@ namespace DAL.DataModels
         [Required]
         [StringLength(50)]
         public string Name { get; set; }
-
         [Required]
-        public Int64 MaxStudent { get; set; }
+        public int Standard { get; set; }
+        [Required]
+        public int MaxStudent { get; set; }
 
         public Int64? TeacherId { get; set; }
         [ForeignKey("TeacherId")]
