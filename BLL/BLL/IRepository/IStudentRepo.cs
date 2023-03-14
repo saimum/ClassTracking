@@ -12,6 +12,6 @@ namespace BLL.IRepository
     {
         Task UpdateAsync(StudentViewModel viewModel);
         Task DeleteAsync(Int64 id);
-        Task<bool> IsNIDExistAsync(StudentViewModel viewModel);
+        //Task<bool> IsNIDExistAsync(StudentViewModel viewModel);
     }
 }

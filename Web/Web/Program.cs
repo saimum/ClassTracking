@@ -12,7 +12,8 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 var connectionString = builder.Configuration.GetConnectionString("ConnectionString1");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+//builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<UnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 

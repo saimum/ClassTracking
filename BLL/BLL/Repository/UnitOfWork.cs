@@ -19,9 +19,13 @@ namespace BLL.Repository
             TeacherRepo = new TeacherRepo(db);
         }
         private readonly ApplicationDbContext _db;
-        public IClassDataModelRepo ClassDataModelRepo { get; private set; }
-        public IStudentRepo StudentRepo { get; private set; }
-        public ITeacherRepo TeacherRepo { get; private set; }
+        //public IClassDataModelRepo ClassDataModelRepo { get; private set; }
+        //public IStudentRepo StudentRepo { get; private set; }
+        //public ITeacherRepo TeacherRepo { get; private set; }
+
+        public ClassDataModelRepo ClassDataModelRepo { get; private set; }
+        public StudentRepo StudentRepo { get; private set; }
+        public TeacherRepo TeacherRepo { get; private set; }
 
         public async void Dispose()
         {

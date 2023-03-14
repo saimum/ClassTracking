@@ -1,4 +1,5 @@
 ﻿using BLL.IRepository;
+using BLL.Repository;
 using DAL.DataModels;
 using DAL.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,10 @@ namespace Web.Controllers
 {
     public class StudentController : BaseController
     {
-        public StudentController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        //public StudentController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        //{
+        //}
+        public StudentController(UnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
         public async Task<IActionResult> Index()
@@ -80,6 +84,7 @@ namespace Web.Controllers
                     else
                     {
                         var dataModel = new Student();
+                        dataModel.IsActive = true;
                         dataModel.Name = viewModel.Name;
                         dataModel.NID = viewModel.NID;
 
