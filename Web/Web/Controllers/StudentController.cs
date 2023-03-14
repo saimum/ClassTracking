@@ -1,88 +1,260 @@
 ﻿using BLL.IRepository;
+using DAL.DataModels;
+using DAL.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Web.Controllers
 {
-    public class StudentController : Controller
+    public class StudentController : BaseController
     {
-        private readonly IUnitOfWork _unitOfWork;
-        public StudentController(IUnitOfWork unitOfWork)
+        public StudentController(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _unitOfWork = unitOfWork;
         }
         public async Task<IActionResult> Index()
         {
-            var list = await _unitOfWork.StudentRepo.GetAllAsync();
-            return View(list);
+            var viewModelList = (await _unitOfWork.StudentRepo.GetAllAsync(filter: m => m.IsActive == true)).Select(dataModel => new StudentViewModel
+            {
+                Id = dataModel.Id,
+                Name = dataModel.Name,
+                NID = dataModel.NID
+            });
+            return View(viewModelList);
         }
 
-        // GET: StudentController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: StudentController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: StudentController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Details(Int64 id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var dataModel = (await _unitOfWork.StudentRepo.GetAsync(id));
+                if (dataModel != null)
+                {
+                    var viewModel = new StudentViewModel()
+                    {
+                        Id = dataModel.Id,
+                        Name = dataModel.Name,
+                        NID = dataModel.NID,
+                    };
+                    return View(viewModel);
+                }
+                else
+                {
+                    TempData["display_message"] = "Not found.";
+                    return RedirectToAction("Index");
+                }
+
             }
-            catch
+            catch (Exception exception)
             {
-                return View();
+                TempData["display_message"] = "Server Error.";
+                var errorMessage = "";
+                while (exception != null)
+                {
+                    errorMessage = errorMessage + exception.Message + " |";
+                    exception = exception.InnerException;
+                }
+                TempData["hidden_message"] = "Error Message= " + errorMessage;
+                return RedirectToAction("Index");
             }
         }
 
-        // GET: StudentController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Create()
         {
             return View();
         }
 
-        // POST: StudentController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Create(StudentViewModel viewModel)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    if (await _unitOfWork.StudentRepo.IsNIDExistAsync(viewModel))
+                    {
+                        TempData["display_message"] = "Already exist.";
+                        return View(viewModel);
+                    }
+                    else
+                    {
+                        var dataModel = new Student();
+                        dataModel.Name = viewModel.Name;
+                        dataModel.NID = viewModel.NID;
+
+                        await _unitOfWork.StudentRepo.AddAsync(dataModel);
+                        await _unitOfWork.SaveAsync();
+
+                        TempData["display_message"] = "Successfully added.";
+                        return RedirectToAction("Index");
+                    }
+                }
+                else
+                {
+                    return View(viewModel);
+                }
             }
-            catch
+            catch (Exception exception)
             {
-                return View();
+                TempData["display_message"] = "Server Error.";
+                var errorMessage = "";
+                while (exception != null)
+                {
+                    errorMessage = errorMessage + exception.Message + " |";
+                    exception = exception.InnerException;
+                }
+                TempData["hidden_message"] = "Error Message= " + errorMessage;
+                return View(viewModel);
             }
         }
 
-        // GET: StudentController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: StudentController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(Int64 id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var dataModel = (await _unitOfWork.StudentRepo.GetAsync(id));
+                if (dataModel != null)
+                {
+                    var viewModel = new StudentViewModel()
+                    {
+                        Id = dataModel.Id,
+                        Name = dataModel.Name,
+                        NID = dataModel.NID,
+                    };
+                    return View(viewModel);
+                }
+                else
+                {
+                    TempData["display_message"] = "Not found.";
+                    return RedirectToAction("Index");
+                }
+
             }
-            catch
+            catch (Exception exception)
             {
-                return View();
+                TempData["display_message"] = "Server Error.";
+                var errorMessage = "";
+                while (exception != null)
+                {
+                    errorMessage = errorMessage + exception.Message + " |";
+                    exception = exception.InnerException;
+                }
+                TempData["hidden_message"] = "Error Message= " + errorMessage;
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(StudentViewModel viewModel)
+        {
+            try
+            {
+                if (ModelState.IsValid && viewModel.Id != 0)
+                {
+                    if (await _unitOfWork.StudentRepo.IsNIDExistAsync(viewModel))
+                    {
+                        TempData["display_message"] = "Already exist.";
+                        return View(viewModel);
+                    }
+                    else
+                    {
+                        await _unitOfWork.StudentRepo.UpdateAsync(viewModel);
+                        await _unitOfWork.SaveAsync();
+
+                        TempData["display_message"] = "Successfull updated.";
+                        return RedirectToAction("Index");
+                    }
+                }
+                else
+                {
+                    TempData["display_message"] = "Not found.";
+                    return View(viewModel);
+                }
+            }
+            catch (Exception exception)
+            {
+                TempData["display_message"] = "Server Error.";
+                var errorMessage = "";
+                while (exception != null)
+                {
+                    errorMessage = errorMessage + exception.Message + " |";
+                    exception = exception.InnerException;
+                }
+                TempData["hidden_message"] = "Error Message= " + errorMessage;
+                return View(viewModel);
+            }
+        }
+
+        public async Task<IActionResult> Delete(Int64 id)
+        {
+            try
+            {
+                var dataModel = (await _unitOfWork.StudentRepo.GetAsync(id));
+                if (dataModel != null)
+                {
+                    var viewModel = new StudentViewModel()
+                    {
+                        Id = dataModel.Id,
+                        Name = dataModel.Name,
+                        NID = dataModel.NID,
+                    };
+                    return View(viewModel);
+                }
+                else
+                {
+                    TempData["display_message"] = "Not found.";
+                    return RedirectToAction("Index");
+                }
+
+            }
+            catch (Exception exception)
+            {
+                TempData["display_message"] = "Server Error.";
+                var errorMessage = "";
+                while (exception != null)
+                {
+                    errorMessage = errorMessage + exception.Message + " |";
+                    exception = exception.InnerException;
+                }
+                TempData["hidden_message"] = "Error Message= " + errorMessage;
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Int64 id)
+        {
+            try
+            {
+                var dataModel = await _unitOfWork.StudentRepo.GetAsync(id);
+                if (dataModel != null)
+                {
+                    dataModel.IsActive = false;
+                    await _unitOfWork.StudentRepo.DeleteAsync(id);
+                    await _unitOfWork.SaveAsync();
+                    TempData["display_message"] = "Successfully removed.";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["display_message"] = "Not found.";
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception exception)
+            {
+                TempData["display_message"] = "Server Error.";
+                var errorMessage = "";
+                while (exception != null)
+                {
+                    errorMessage = errorMessage + exception.Message + " |";
+                    exception = exception.InnerException;
+                }
+                TempData["hidden_message"] = "Error Message= " + errorMessage;
+                return RedirectToAction("Index");
             }
         }
     }

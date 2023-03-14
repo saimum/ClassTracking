@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.DataModels
+namespace DAL.ViewModels
 {
-    public class ClassDataModel
+    public class ClassViewModel
     {
-        [Key]
-        public Int64 Id { get; set; }
+        public Int64? Id { get; set; }
         [Required]
         [StringLength(50)]
         public string Name { get; set; }
@@ -20,8 +18,5 @@ namespace DAL.DataModels
         public Int64 MaxStudent { get; set; }
 
         public Int64? TeacherId { get; set; }
-        [ForeignKey("TeacherId")]
-        public virtual Teacher? Teacher { get; set; }
-        public ICollection<Student> Students { get; set; }
     }
 }

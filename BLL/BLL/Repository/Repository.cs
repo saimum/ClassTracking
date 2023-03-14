@@ -79,12 +79,12 @@ namespace BLL.Repository
             }
             return query;
         }
-        public async Task<T> GetAsync(long id)
+        public async Task<T> GetAsync(Int64 id)
         {
             return await dbSet.FindAsync(id);
         }
 
-        public async Task RemoveAsync(long id)
+        public async Task RemoveAsync(Int64 id)
         {
             var entity = await dbSet.FindAsync(id);
             dbSet.Remove(entity);

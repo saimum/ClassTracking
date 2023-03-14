@@ -1,5 +1,6 @@
 ﻿using BLL.IRepository;
 using DAL.DataModels;
+using DAL.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,12 +17,12 @@ namespace BLL.Repository
         {
             _db = db;
         }
-        public async Task UpdateAsync(ClassDataModel model)
+        public async Task UpdateAsync(ClassViewModel viewModel)
         {
-            var dataObj = await _db.ClassDataModels.FirstOrDefaultAsync(x => x.Id == model.Id);
+            var dataObj = await _db.ClassDataModels.FirstOrDefaultAsync(x => x.Id == viewModel.Id);
             if (dataObj != null)
             {
-                dataObj.Name = model.Name;
+                dataObj.Name = viewModel.Name;
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using DAL.DataModels;
+using DAL.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace BLL.IRepository
 {
     public interface ITeacherRepo : IRepository<Teacher>
     {
-        Task UpdateAsync(Teacher model);
-        Task<bool> IsNIDExistAsync(Teacher model);
+        Task UpdateAsync(TeacherViewModel viewModel);
+        Task DeleteAsync(Int64 id);
+        Task<bool> IsNIDExistAsync(TeacherViewModel viewModel);
     }
 }

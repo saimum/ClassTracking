@@ -1,4 +1,5 @@
 ﻿using DAL.DataModels;
+using DAL.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace BLL.IRepository
 {
     public interface IClassDataModelRepo : IRepository<ClassDataModel>
     {
-        Task UpdateAsync(ClassDataModel model);
+        Task UpdateAsync(ClassViewModel viewModel);
         //Task<bool> IsActiveExistAsync();
     }
 }

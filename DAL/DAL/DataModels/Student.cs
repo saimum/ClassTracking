@@ -11,7 +11,8 @@ namespace DAL.DataModels
     public class Student
     {
         [Key]
-        public long Id { get; set; }
+        public Int64 Id { get; set; }
+        public bool IsActive { get; set; }
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
@@ -19,7 +20,7 @@ namespace DAL.DataModels
         [StringLength(50)]
         public string NID { get; set; }
 
-        public int? ClassDataModelId { get; set; }
+        public Int64? ClassDataModelId { get; set; }
         [ForeignKey("ClassDataModelId")]
         public virtual ClassDataModel? ClassDataModel { get; set; }
     }

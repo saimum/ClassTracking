@@ -5,22 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.DataModels
+namespace DAL.ViewModels
 {
-    public class Teacher
+    public class TeacherViewModel
     {
-        [Key]
-        public Int64 Id { get; set; }
-        public bool IsActive { get; set; }
+        public Int64? Id { get; set; }
         [Required]
         [StringLength(200)]
         public string Name { get; set; }
         [Required]
         [StringLength(50)]
         public string NID { get; set; }
-
-        //public int ClassDataModelId { get; set; }
-        //[ForeignKey("ClassDataModelId")]
-        //public virtual ClassDataModel ClassDataModel { get; set; }
     }
 }

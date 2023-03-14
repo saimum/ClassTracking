@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.ViewModels;
 
 namespace BLL.Repository
 {
@@ -17,25 +18,33 @@ namespace BLL.Repository
         {
             _db = db;
         }
-        public async Task UpdateAsync(Student model)
+        public async Task UpdateAsync(StudentViewModel viewModel)
         {
-            var dataObj = await _db.Students.FirstOrDefaultAsync(x => x.Id == model.Id);
+            var dataObj = await _db.Students.FirstOrDefaultAsync(x => x.Id == viewModel.Id);
             if (dataObj != null)
             {
-                dataObj.Name = model.Name;
-                dataObj.NID = model.NID;
+                dataObj.Name = viewModel.Name;
+                dataObj.NID = viewModel.NID;
             }
         }
-        public async Task<bool> IsNIDExistAsync(Student model)
+        public async Task DeleteAsync(Int64 id)
+        {
+            var dataObj = await _db.Students.FirstOrDefaultAsync(x => x.Id == id);
+            if (dataObj != null)
+            {
+                dataObj.IsActive = false;
+            }
+        }
+        public async Task<bool> IsNIDExistAsync(StudentViewModel viewModel)
         {
             var dataObjCheck = false;
-            if (model.Id == 0)
+            if (viewModel.Id == 0)
             {
-                dataObjCheck = await _db.Students.AnyAsync(x => x.NID == model.NID);
+                dataObjCheck = await _db.Students.AnyAsync(x => x.NID == viewModel.NID);
             }
             else
             {
-                dataObjCheck = await _db.Students.AnyAsync(x => x.NID == model.NID && x.Id != model.Id);
+                dataObjCheck = await _db.Students.AnyAsync(x => x.NID == viewModel.NID && x.Id != viewModel.Id);
             }
             return dataObjCheck;
         }
