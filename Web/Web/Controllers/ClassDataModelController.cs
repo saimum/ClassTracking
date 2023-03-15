@@ -195,7 +195,7 @@ namespace Web.Controllers
             }
         }
 
-        public async Task<IActionResult> AssignStudents(Int64 id)
+        public async Task<IActionResult> Students(Int64 id)
         {
             try
             {
@@ -240,7 +240,7 @@ namespace Web.Controllers
             }
         }
 
-        public async Task<IActionResult> TryAssign(Int64 classId, Int64 studentId)
+        public async Task<IActionResult> TryAssignStudent(Int64 classId, Int64 studentId)
         {
             try
             {
@@ -249,7 +249,7 @@ namespace Web.Controllers
                 if (classDataModel.MaxStudent >= currentStudetnCount)
                 {
                     await _unitOfWork.StudentRepo.SetClassAsync(studentId, classId);
-                    _unitOfWork.SaveAsync();
+                    var res = _unitOfWork.SaveAsync();
 
                     return Json(new { status = true, display_message = "Assigned to Class " + classDataModel.Name, hidden_message = "" });
                 }

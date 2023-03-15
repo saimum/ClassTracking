@@ -71,7 +71,7 @@
             type: "post",
             dataType: "json",
             contentType: "application/json",
-            url: "/ClassDataModel/TryAssign?classId=" + @Model.Item1.Id+"&studentId=" + studentId,
+            url: "/ClassDataModel/TryAssignStudent?classId=" + @Model.Item1.Id+"&studentId=" + studentId,
             //data: JSON.stringify({ ClassId: @Model.Item1.Id, StudentId: studentId }),
             success: function (data) {
                 $("#td_" + studentId).html(data.display_message);
