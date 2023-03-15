@@ -245,8 +245,8 @@ namespace Web.Controllers
             try
             {
                 var classDataModel = await _unitOfWork.ClassDataModelRepo.GetAsync(classId);
-                var currentStudetnCount = await _unitOfWork.StudentRepo.CountAsync(filter: x => x.ClassDataModelId == classId);
-                if (classDataModel.MaxStudent >= currentStudetnCount)
+                var currentStudentCount = await _unitOfWork.StudentRepo.CountAsync(filter: x => x.ClassDataModelId == classId);
+                if (classDataModel.MaxStudent > currentStudentCount)
                 {
                     await _unitOfWork.StudentRepo.SetClassAsync(studentId, classId);
                     var res = _unitOfWork.SaveAsync();
@@ -256,6 +256,78 @@ namespace Web.Controllers
                 else
                 {
                     return Json(new { status = false, display_message = classDataModel.Name + " already has maximum students", hidden_message = "" });
+                }
+            }
+            catch (Exception exception)
+            {
+                var errorMessage = "";
+                while (exception != null)
+                {
+                    errorMessage = errorMessage + exception.Message + " |";
+                    exception = exception.InnerException;
+                }
+                return Json(new { status = true, display_message = "Server Error.", hidden_message = "Error Message= " + errorMessage });
+            }
+        }
+
+        public async Task<IActionResult> Teachers(Int64 id)
+        {
+            try
+            {
+                var classDataModel = (await _unitOfWork.ClassDataModelRepo.GetAsync(id));
+                if (classDataModel != null)
+                {
+                    var classViewModel = new ClassViewModel()
+                    {
+                        Id = classDataModel.Id,
+                        Name = classDataModel.Name,
+                        Standard = classDataModel.Standard,
+                    };
+                    var TeacherViewModelList = (await _unitOfWork.TeacherRepo.GetAllAsync(filter: m => m.IsActive == true, includeProperties: "ClassDataModel")).Select(TeacherDataModel => new TeacherViewModel
+                    {
+                        Id = TeacherDataModel.Id,
+                        Name = TeacherDataModel.Name,
+                        NID = TeacherDataModel.NID,
+                        ClassDataModel = TeacherDataModel.ClassDataModel,
+                    }).ToList();
+
+                    return View(new Tuple<ClassViewModel, List<TeacherViewModel>>(classViewModel, TeacherViewModelList));
+                }
+                else
+                {
+                    TempData["display_message"] = "Not found.";
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception exception)
+            {
+                TempData["display_message"] = "Server Error.";
+                var errorMessage = "";
+                while (exception != null)
+                {
+                    errorMessage = errorMessage + exception.Message + " |";
+                    exception = exception.InnerException;
+                }
+                TempData["hidden_message"] = "Error Message= " + errorMessage;
+                return RedirectToAction("Index");
+            }
+        }
+
+        public async Task<IActionResult> TryAssignTeacher(Int64 classId, Int64 TeacherId)
+        {
+            try
+            {
+                var currentClass = await _unitOfWork.TeacherRepo.FirstOrDefaultAsync(filter: x => x.ClassDataModelId == classId);
+                if (currentClass == null)
+                {
+                    await _unitOfWork.TeacherRepo.SetClassAsync(TeacherId, classId);
+                    var res = _unitOfWork.SaveAsync();
+
+                    return Json(new { status = true, display_message = "Assigned to Class successfully", hidden_message = "" });
+                }
+                else
+                {
+                    return Json(new { status = false, display_message = currentClass.Name + " is assinged this teacher", hidden_message = "" });
                 }
             }
             catch (Exception exception)

@@ -1,0 +1,77 @@
+﻿@model Tuple<DAL.ViewModels.ClassViewModel, List<DAL.ViewModels.TeacherViewModel>>
+
+@{
+    ViewData["Title"] = "Material List";
+}
+
+<h4>List</h4>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Item1.Name)
+        </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayFor(model => model.Item1.Name)
+        </dt>
+    </dl>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Item2.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Item2.FirstOrDefault().NID)
+            </th>
+            <th>
+                Current Class
+            </th>
+            <th></th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Item2.ToList())
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassDataModel.Name)
+                </td>
+                <td>
+                    @*<a asp-action="" onclick="tryAssign('@item.Id')" asp-route-id="@item.Id">Edit</a>*@
+                    <input type="button" onclick="tryAssign('@item.Id')" value="Assign">
+                </td>
+                <td id="td_@item.Id">
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    function tryAssign(TeacherId) {
+
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/ClassDataModel/TryAssignTeacher?classId=" + @Model.Item1.Id+"&TeacherId=" + TeacherId,
+            //data: JSON.stringify({ ClassId: @Model.Item1.Id, TeacherId: TeacherId }),
+            success: function (data) {
+                $("#td_" + TeacherId).html(data.display_message);
+                console.log(data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_VehicleBrandModel()");
+            }
+        });
+    }
+</script>
