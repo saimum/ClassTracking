@@ -48,6 +48,15 @@ namespace BLL.Repository
             }
             return dataObjCheck;
         }
+        public async Task SetClassAsync(Int64 studentId, Int64 classId)
+        {
+            var dataObj = await _db.Students.FirstOrDefaultAsync(x => x.Id == studentId);
+            if (dataObj != null)
+            {
+                dataObj.ClassDataModelId = classId;
+            }
+        }
+
     }
 }
 

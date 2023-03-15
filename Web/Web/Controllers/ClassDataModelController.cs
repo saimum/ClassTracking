@@ -239,47 +239,33 @@ namespace Web.Controllers
             }
         }
 
-        public async Task<IActionResult> TryAssign(Int64 ClassId, Int64 StudentId)
+        public async Task<IActionResult> TryAssign(Int64 classId, Int64 studentId)
         {
             try
             {
-                //var classDataModel = (await _unitOfWork.ClassDataModelRepo.GetAsync(id));
-                //if (classDataModel != null)
-                //{
-                //    var classViewModel = new ClassViewModel()
-                //    {
-                //        Id = classDataModel.Id,
-                //        Name = classDataModel.Name,
-                //        Standard = classDataModel.Standard,
-                //        MaxStudent = classDataModel.MaxStudent
-                //    };
-                //    var studentViewModelList = (await _unitOfWork.StudentRepo.GetAllAsync(filter: m => m.IsActive == true, includeProperties: "ClassDataModel")).Select(studentDataModel => new StudentViewModel
-                //    {
-                //        Id = studentDataModel.Id,
-                //        Name = studentDataModel.Name,
-                //        NID = studentDataModel.NID,
-                //        ClassDataModel = studentDataModel.ClassDataModel,
-                //    }).ToList();
+                var classDataModel = await _unitOfWork.ClassDataModelRepo.GetAsync(classId);
+                var currentStudetnCount = await _unitOfWork.StudentRepo.CountAsync(filter: x => x.ClassDataModelId == classId);
+                if (classDataModel.MaxStudent >= currentStudetnCount)
+                {
+                    await _unitOfWork.StudentRepo.SetClassAsync(studentId, classId);
+                    _unitOfWork.SaveAsync();
 
-                //    return View(new Tuple<ClassViewModel, List<StudentViewModel>>(classViewModel, studentViewModelList));
-                //}
-                //else
-                //{
-                //    TempData["display_message"] = "Not found.";
-                return RedirectToAction("Index");
-                //}
+                    return Json(new { status = true, display_message = "Assigned to Class " + classDataModel.Name, hidden_message = "" });
+                }
+                else
+                {
+                    return Json(new { status = false, display_message = classDataModel.Name + " already has maximum students", hidden_message = "" });
+                }
             }
             catch (Exception exception)
             {
-                TempData["display_message"] = "Server Error.";
                 var errorMessage = "";
                 while (exception != null)
                 {
                     errorMessage = errorMessage + exception.Message + " |";
                     exception = exception.InnerException;
                 }
-                TempData["hidden_message"] = "Error Message= " + errorMessage;
-                return RedirectToAction("Index");
+                return Json(new { status = true, display_message = "Server Error.", hidden_message = "Error Message= " + errorMessage });
             }
         }
     }

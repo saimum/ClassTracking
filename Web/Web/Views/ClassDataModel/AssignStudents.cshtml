@@ -71,15 +71,11 @@
             type: "post",
             dataType: "json",
             contentType: "application/json",
-            url: "/ClassDataModel/TryAssign?ClassId=" + @Model.Item1.Id+"&StudentId=" + studentId,
+            url: "/ClassDataModel/TryAssign?classId=" + @Model.Item1.Id+"&studentId=" + studentId,
             //data: JSON.stringify({ ClassId: @Model.Item1.Id, StudentId: studentId }),
             success: function (data) {
-                //$('select[name=FK_VehicleModel]').html("");
-                //var result = "";
-                //for (var i = 0; i < data.length; i++) {
-                //    result = result + "<option value='" + data[i].PK_VehicleModel + "'>" + data[i].Title + "</option>";
-                //}
-                //$('select[name=FK_VehicleModel]').html(result);
+                $("#td_" + studentId).html(data.display_message);
+                console.log(data);
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log("Err on call: relodeFK_VehicleBrandModel()");

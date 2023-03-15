@@ -62,6 +62,23 @@ namespace BLL.Repository
             }
             return await query.ToListAsync();
         }
+        public async Task<int> CountAsync(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, string? includeProperties = null)
+        {
+            IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (includeProperties != null)
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+
+                    query = query.Include(includeProp);
+                }
+            }
+            return await query.CountAsync();
+        }
         public async Task<IQueryable<T>> GetAllAsyncQueryable(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
