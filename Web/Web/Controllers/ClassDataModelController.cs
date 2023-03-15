@@ -200,6 +200,7 @@ namespace Web.Controllers
             try
             {
                 var classDataModel = (await _unitOfWork.ClassDataModelRepo.GetAsync(id));
+                var allStudent = (await _unitOfWork.ClassDataModelRepo.FirstOrDefaultAsync()).Students;
                 if (classDataModel != null)
                 {
                     var classViewModel = new ClassViewModel()

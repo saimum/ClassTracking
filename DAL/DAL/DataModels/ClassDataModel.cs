@@ -23,6 +23,6 @@ namespace DAL.DataModels
         public Int64? TeacherId { get; set; }
         [ForeignKey("TeacherId")]
         public virtual Teacher? Teacher { get; set; }
-        public ICollection<Student> Students { get; set; }
+        public virtual ICollection<Student> Students { get; set; }
     }
 }

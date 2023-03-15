@@ -13,7 +13,7 @@ namespace BLL.Repository
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _db;
-        private readonly DbSet<T> dbSet;
+        public readonly DbSet<T> dbSet;
         public Repository(ApplicationDbContext db)
         {
             _db = db;
