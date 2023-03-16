@@ -57,6 +57,14 @@ namespace BLL.Repository
                 dataObj.ClassDataModelId = classId;
             }
         }
+        public async Task UnsetClassAsync(Int64 id)
+        {
+            var dataObj = await _db.Teachers.FirstOrDefaultAsync(x => x.Id == id);
+            if (dataObj != null)
+            {
+                dataObj.ClassDataModelId = null;
+            }
+        }
     }
 }
 

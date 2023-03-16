@@ -15,12 +15,13 @@ namespace Web.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var viewModelList = (await _unitOfWork.TeacherRepo.GetAllAsync(filter: m => m.IsActive == true)).Select(dataModel => new TeacherViewModel
+            var viewModelList = (await _unitOfWork.TeacherRepo.GetAllAsync(filter: m => m.IsActive == true, includeProperties: "ClassDataModel")).Select(TeacherDataModel => new TeacherViewModel
             {
-                Id = dataModel.Id,
-                Name = dataModel.Name,
-                NID = dataModel.NID
-            });
+                Id = TeacherDataModel.Id,
+                Name = TeacherDataModel.Name,
+                NID = TeacherDataModel.NID,
+                ClassDataModel = TeacherDataModel.ClassDataModel,
+            }).ToList();
             return View(viewModelList);
         }
 
@@ -257,6 +258,34 @@ namespace Web.Controllers
                 }
                 TempData["hidden_message"] = "Error Message= " + errorMessage;
                 return RedirectToAction("Index");
+            }
+        }
+        public async Task<IActionResult> UnsetClass(Int64 id)
+        {
+            try
+            {
+                var dataModel = await _unitOfWork.TeacherRepo.GetAsync(id);
+                if (dataModel != null)
+                {
+                    await _unitOfWork.TeacherRepo.UnsetClassAsync(id);
+                    await _unitOfWork.SaveAsync();
+
+                    return Json(new { status = true, display_message = "Assigned to Class successfully", hidden_message = "" });
+                }
+                else
+                {
+                    return Json(new { status = false, display_message = "Not Found", hidden_message = "" });
+                }
+            }
+            catch (Exception exception)
+            {
+                var errorMessage = "";
+                while (exception != null)
+                {
+                    errorMessage = errorMessage + exception.Message + " |";
+                    exception = exception.InnerException;
+                }
+                return Json(new { status = true, display_message = "Server Error.", hidden_message = "Error Message= " + errorMessage });
             }
         }
     }

@@ -237,7 +237,6 @@ namespace Web.Controllers
                 var dataModel = await _unitOfWork.StudentRepo.GetAsync(id);
                 if (dataModel != null)
                 {
-                    dataModel.IsActive = false;
                     await _unitOfWork.StudentRepo.DeleteAsync(id);
                     await _unitOfWork.SaveAsync();
                     TempData["display_message"] = "Successfully removed.";

@@ -17,7 +17,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.NID)
             </th>
+            <th>
+                Current Class
+            </th>
             <th></th>
+            <th>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -33,8 +38,10 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                    <a asp-action="UnsetClass" asp-route-id="@item.Id">UnsetClass</a> |
                 </td>
+                <td id="td_@item.Id"></td>
             </tr>
         }
     </tbody>

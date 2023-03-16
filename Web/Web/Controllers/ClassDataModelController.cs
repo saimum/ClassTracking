@@ -313,21 +313,22 @@ namespace Web.Controllers
             }
         }
 
-        public async Task<IActionResult> TryAssignTeacher(Int64 classId, Int64 TeacherId)
+        public async Task<IActionResult> TryAssignTeacher(Int64 classId, Int64 teacherId)
         {
             try
             {
-                var currentClass = await _unitOfWork.TeacherRepo.FirstOrDefaultAsync(filter: x => x.ClassDataModelId == classId);
-                if (currentClass == null)
+                var classDataModel = await _unitOfWork.ClassDataModelRepo.GetAsync(classId);
+                var teacherDataModel = await _unitOfWork.TeacherRepo.GetAsync(teacherId);
+                if (classDataModel != null && teacherDataModel != null && teacherDataModel.ClassDataModelId == null)
                 {
-                    await _unitOfWork.TeacherRepo.SetClassAsync(TeacherId, classId);
+                    await _unitOfWork.TeacherRepo.SetClassAsync(teacherId, classId);
                     var res = _unitOfWork.SaveAsync();
 
                     return Json(new { status = true, display_message = "Assigned to Class successfully", hidden_message = "" });
                 }
                 else
                 {
-                    return Json(new { status = false, display_message = currentClass.Name + " is assinged this teacher", hidden_message = "" });
+                    return Json(new { status = false, display_message = classDataModel.Name + " is already has a teacher.", hidden_message = "" });
                 }
             }
             catch (Exception exception)
