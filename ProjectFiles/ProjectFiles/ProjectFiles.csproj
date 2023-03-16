@@ -31,5 +31,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="DB_ClassTracking.bak" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DB_ClassTracking.sql" />
+    <Content Include="ReadMe.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
